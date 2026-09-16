@@ -1,0 +1,21 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a1a1a"/>
+      <stop offset="100%" stop-color="#c96f4a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="75%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#ffd8b8" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffd8b8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#glow)"/>
+  <g opacity="0.5" stroke="#fff2e6" stroke-width="1.5" fill="none">
+    <path d="M -50 620 C 250 520, 350 720, 650 600 S 1050 500 1260 600"/>
+    <path d="M -50 680 C 250 580, 350 780, 650 660 S 1050 560 1260 660"/>
+    <path d="M -50 560 C 250 460, 350 660, 650 540 S 1050 440 1260 540"/>
+  </g>
+  <text x="70" y="230" font-family="Helvetica, Arial, sans-serif" font-size="26" letter-spacing="4" fill="#ffe9d6" opacity="0.85">MUSIC DISCOVERY</text>
+  <text x="66" y="330" font-family="Helvetica, Arial, sans-serif" font-size="120" font-weight="700" fill="#fff9f2">iDiscovr</text>
+</svg>

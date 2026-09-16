@@ -1,0 +1,4 @@
+github.svg, linkedin.svg, gmail.svg, calcom.svg are from the Simple Icons project
+(https://simpleicons.org), icon shapes released under CC0 1.0. Brand names and
+logos remain trademarks of their respective owners; used here only to link to
+those services.
