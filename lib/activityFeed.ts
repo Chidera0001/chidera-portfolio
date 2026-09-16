@@ -48,14 +48,39 @@ function extractStravaActivityId(url: string | null): string | null {
   return match ? match[1] : null;
 }
 
-// Imgur's page URL (imgur.com/<id>) isn't a hotlinkable image — only its CDN
-// subdomain (i.imgur.com/<id>.<ext>) is. Imgur serves the real file
-// regardless of the extension in the URL, so defaulting to .jpg here is
-// enough to turn a pasted page link into something an <img> tag can use.
-function normalizeImageUrl(url: string | null): string | null {
+// Imgur's single-image page URL (imgur.com/<id>) isn't hotlinkable — only its
+// CDN subdomain (i.imgur.com/<id>.<ext>) is, and Imgur serves the real file
+// regardless of the extension in the URL, so defaulting to .jpg is enough to
+// turn a pasted single-image link into something an <img> tag can use.
+//
+// Album/gallery links (imgur.com/a/<id>, imgur.com/gallery/<id>) don't follow
+// that pattern — the image inside has its own id, unrelated to the album's —
+// so those are resolved by fetching the page and reading its og:image tag,
+// same trick link-preview bots use.
+async function resolveImgurUrl(url: string | null): Promise<string | null> {
   if (!url) return null;
-  const pageMatch = url.match(/^https?:\/\/(?:www\.)?imgur\.com\/([A-Za-z0-9]+)$/);
-  if (pageMatch) return `https://i.imgur.com/${pageMatch[1]}.jpg`;
+  if (/^https?:\/\/i\.imgur\.com\//.test(url)) return url;
+
+  const singleImageMatch = url.match(/^https?:\/\/(?:www\.)?imgur\.com\/([A-Za-z0-9]+)$/);
+  if (singleImageMatch) return `https://i.imgur.com/${singleImageMatch[1]}.jpg`;
+
+  if (/^https?:\/\/(?:www\.)?imgur\.com\//.test(url)) {
+    try {
+      const res = await fetch(url, { next: { revalidate: 3600 } });
+      if (res.ok) {
+        const html = await res.text();
+        // Attribute order isn't guaranteed (Imgur puts data-react-helmet
+        // between property and content), so match the whole tag first, then
+        // pull content= out of it rather than assuming adjacency.
+        const metaTag = html.match(/<meta[^>]*property="og:image"[^>]*>/i);
+        const ogImage = metaTag?.[0].match(/content="([^"]+)"/i);
+        if (ogImage) return ogImage[1];
+      }
+    } catch {
+      // fall through to the original url below
+    }
+  }
+
   return url;
 }
 
@@ -146,7 +171,7 @@ function toDayKey(dateStr: string): string | null {
   return d.toISOString().slice(0, 10);
 }
 
-function parseActivityCsv(text: string): LoggedActivity[] {
+async function parseActivityCsv(text: string): Promise<LoggedActivity[]> {
   const rows = parseCsv(text);
   if (rows.length < 2) return [];
 
@@ -205,7 +230,7 @@ function parseActivityCsv(text: string): LoggedActivity[] {
       durationMin,
       stravaUrl,
       activityId: extractStravaActivityId(stravaUrl),
-      imageUrl: normalizeImageUrl(idx.imageUrl !== -1 ? row[idx.imageUrl]?.trim() || null : null),
+      imageUrl: await resolveImgurUrl(idx.imageUrl !== -1 ? row[idx.imageUrl]?.trim() || null : null),
       mapUrl: idx.mapUrl !== -1 ? row[idx.mapUrl]?.trim() || null : null,
     });
   }
@@ -225,7 +250,7 @@ export async function getRecentActivities(): Promise<FeedResult> {
       return { ok: false, reason: `Couldn't load the activity feed (${res.status}).` };
     }
     const text = await res.text();
-    return { ok: true, activities: parseActivityCsv(text) };
+    return { ok: true, activities: await parseActivityCsv(text) };
   } catch {
     return { ok: false, reason: "Couldn't reach the activity feed right now." };
   }
