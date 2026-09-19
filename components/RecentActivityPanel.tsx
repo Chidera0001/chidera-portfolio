@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { LoggedActivity } from "@/lib/activityFeed";
+import { flagFootballGallery } from "@/lib/data";
 import {
   formatDistanceKm,
   formatDuration,
@@ -41,6 +42,18 @@ function ActivityMedia({ activity }: { activity: LoggedActivity }) {
   }
 
   const type = activity.type.toLowerCase();
+
+  if (type.includes("flag") && flagFootballGallery.length > 0) {
+    // No Strava data for flag football days — cycle through the real
+    // flag football gallery instead, picked deterministically by day so it
+    // doesn't reshuffle on every render.
+    const dayOfMonth = parseInt(activity.dayKey.slice(-2), 10) || 0;
+    const photo = flagFootballGallery[dayOfMonth % flagFootballGallery.length];
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={photo} alt={`Flag football — ${activity.name}`} className={MEDIA_CLASS} />
+    );
+  }
 
   if (type.includes("soccer")) {
     return (

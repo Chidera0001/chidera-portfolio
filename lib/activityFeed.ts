@@ -28,6 +28,10 @@ import "server-only";
 //
 // duration_min / duration_sec and map_url are still accepted as a legacy
 // fallback for rows without a strava_url or image_url.
+//
+// type "Flag" (flag football, which has no Strava data) leave image_url
+// blank — components/RecentActivityPanel.tsx fills the card with a real
+// flag football photo from lib/data.ts's flagFootballGallery instead.
 
 export type LoggedActivity = {
   date: string; // as parsed from the sheet, ISO-ish

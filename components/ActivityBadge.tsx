@@ -8,6 +8,7 @@ const TAG_STYLES: Record<string, string> = {
   Hike: "bg-[var(--tag-green-bg)] text-[var(--tag-green-fg)]",
   Soccer: "bg-[var(--tag-blue-bg)] text-[var(--tag-blue-fg)]",
   AmericanFootball: "bg-[var(--tag-blue-bg)] text-[var(--tag-blue-fg)]",
+  Flag: "bg-[var(--tag-blue-bg)] text-[var(--tag-blue-fg)]",
   Workout: "bg-[var(--tag-purple-bg)] text-[var(--tag-purple-fg)]",
   WeightTraining: "bg-[var(--tag-purple-bg)] text-[var(--tag-purple-fg)]",
   Crossfit: "bg-[var(--tag-purple-bg)] text-[var(--tag-purple-fg)]",
