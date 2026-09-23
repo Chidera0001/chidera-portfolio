@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Manrope, Caveat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { CustomCursor } from "@/components/cursor/CustomCursor";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -38,6 +40,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <CustomCursor />
           {children}
           <BookACall />
+          <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
