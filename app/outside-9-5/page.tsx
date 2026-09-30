@@ -66,7 +66,7 @@ export default async function OutsideNineToFivePage() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.14em] text-[var(--fg-faint)]">
-              Currently
+              Completed
             </p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight">
               September 5K Challenge
@@ -96,13 +96,13 @@ export default async function OutsideNineToFivePage() {
                 style={{
                   width: `${Math.min(
                     100,
-                    (challenge.daysDone / challenge.daysTarget) * 100
+                    (challenge.daysElapsed / challenge.daysTarget) * 100
                   )}%`,
                 }}
               />
             </div>
             <p className="mt-3 text-sm text-[var(--fg-muted)]">
-              Run, walk, or jog 5K every day in September — {challenge.daysElapsed} days in.
+              Ran, walked, or jogged 5K every day in September — finished all {challenge.daysTarget} days.
             </p>
           </div>
         )}
